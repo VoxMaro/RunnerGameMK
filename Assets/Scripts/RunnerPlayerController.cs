@@ -20,6 +20,9 @@ public class RunnerPlayerController : MonoBehaviour
 
    // float m_vertVelocity;
 
+
+    //maybe add double jump
+
     // Start is called before the first frame update
     void Start()
     {
@@ -54,13 +57,24 @@ public class RunnerPlayerController : MonoBehaviour
         if (m_raycastResult && MovDirection.y < 0)
         {
             MovDirection.y = 0;
+            m_jumping = false;
         }
 
 
         if (!m_raycastResult)
         {
-            m_jumping = false;
             MovDirection += Physics.gravity / 50;
+        }
+
+
+        //stop jumping if player stops holding jump
+        if (m_jumping && !(Input.GetAxisRaw("Jump") > 0))
+        {
+            if (MovDirection.y > 0)
+            {
+                MovDirection.y /=3 ;
+            }
+            m_jumping = false;
         }
 
         transform.position += MovDirection * Time.deltaTime;
@@ -71,6 +85,12 @@ public class RunnerPlayerController : MonoBehaviour
 
 
     }
+
+    public void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("HIT");
+    }
+
 
     void FixedUpdate()
     {

@@ -6,10 +6,10 @@ public class RunnerGameplayFunctions : MonoBehaviour
 {
     // Start is called before the first frame update
 
-    [SerializeField] GameObject m_playerPrefab;
-    [SerializeField] Camera m_levelCamera;
-    [SerializeField] Button buttonToStart;
-    [SerializeField] Canvas m_guiCanvas;
+    [SerializeField] GameObject m_playerPrefab = null;
+    [SerializeField] Camera m_levelCamera = null;
+    [SerializeField] Button buttonToStart = null;
+    //[SerializeField] Canvas m_guiCanvas = null;
     bool started = false;
     //Add state management
     

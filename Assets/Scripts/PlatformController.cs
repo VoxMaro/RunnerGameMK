@@ -12,7 +12,7 @@ public class PlatformController : MonoBehaviour
 
     void Start()
     {
-        transform.localScale = new Vector3(0,0,PlatformLength);
+        transform.localScale = new Vector3(1,1,PlatformLength);
     }
 
     void Update()
@@ -21,11 +21,11 @@ public class PlatformController : MonoBehaviour
         transform.position += MovDirection * Time.deltaTime;
     }
 
-    void SetPlatformProperties(float Speed, float Length = 10f, bool Breakable = false)
+    public void SetPlatformProperties(float Length = 10f, float Speed = -8f,  bool Breakable = false)
     {
         PlatformSpeed = Speed;
         PlatformLength = Length;
-        transform.localScale = new Vector3(0, 0, PlatformLength);
+        transform.localScale = new Vector3(1, 1, PlatformLength);
         m_isBreakable = Breakable;
     }
     public bool PlatformIsOffscreen()
