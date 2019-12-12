@@ -30,7 +30,7 @@ public class PlatformController : MonoBehaviour
     }
     public bool PlatformIsOffscreen()
     {
-        if (transform.position.z < -((PlatformLength / 2) + 10)) return true;
+        if (transform.position.z < -(PlatformLength + 10)) return true;
         else return false;
     }
     

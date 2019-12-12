@@ -53,6 +53,7 @@ public class RunnerPlayerController : MonoBehaviour
         
             //int layermask = 1 << 9;
         m_raycastResult = Physics.Raycast(transform.position, Vector3.down, PlayerHeight, LayerMask.GetMask("Default"));
+        //m_raycastResult = Physics.Raycast(transform.position+transform.localScale, Vector3.down, PlayerHeight, LayerMask.GetMask("Default"));
         Debug.DrawRay(transform.position, Vector3.down * PlayerHeight);
         if (m_raycastResult && MovDirection.y < 0)
         {

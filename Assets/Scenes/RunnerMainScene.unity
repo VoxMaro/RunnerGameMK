@@ -695,7 +695,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: caeaf1823c6720240b5b0fa39f9c041d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_playerPrefab: {fileID: 849260925071563774, guid: 02d36753fb520704e993c5185b6ac354,
+  m_playerPrefab: {fileID: 8104890435599136086, guid: 54e6abc49830974488dd226db19e153e,
     type: 3}
   m_levelCamera: {fileID: 1353933811}
   buttonToStart: {fileID: 648192447}

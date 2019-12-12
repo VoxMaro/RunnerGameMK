@@ -13,6 +13,8 @@ public class PlatformManager : MonoBehaviour
     float PlatformTimer = 0f;
     bool firstPlatform = false;
 
+    Vector2 lastVector;
+
     //currently creating/destroying objects, maybe use object pool instead
 
 
@@ -35,7 +37,7 @@ public class PlatformManager : MonoBehaviour
             PlatformTimer += Time.deltaTime;
             if (PlatformTimer > 2f)
             {
-                SpawnPlatform();
+                SpawnPlatform(true);
                 PlatformTimer = 0f;
             }
             List<GameObject> offscreenPlatforms = activePlatforms.FindAll(platform => platform.GetComponent<PlatformController>().PlatformIsOffscreen());
@@ -53,9 +55,27 @@ public class PlatformManager : MonoBehaviour
         activePlatforms.Add(createdPlatform);
         firstPlatform = true;
     }
-    void SpawnPlatform()
+    void SpawnPlatform(bool random)
     {
-        GameObject createdPlatform = Instantiate(platformPrefab, new Vector3(0,0,20), Quaternion.identity);
-        activePlatforms.Add(createdPlatform);
+        if (random == false) { 
+            GameObject createdPlatform = Instantiate(platformPrefab, new Vector3(0, 0, 20), Quaternion.identity); 
+            activePlatforms.Add(createdPlatform); 
+        }
+        if (random == true) {
+            Vector2 vector = RandomRelativeVectorNormalized() * 2;
+            GameObject createdPlatform = Instantiate(platformPrefab, new Vector3(0, vector.y, 20 + vector.x), Quaternion.identity); 
+            activePlatforms.Add(createdPlatform);
+            lastVector = vector;
+        }
+
     }
+
+    //Add randomization functions here
+
+    Vector2 RandomRelativeVectorNormalized()
+    {
+        float angle = Random.Range(-60, 60) * Mathf.Deg2Rad;
+        return new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+    }
+
 }
