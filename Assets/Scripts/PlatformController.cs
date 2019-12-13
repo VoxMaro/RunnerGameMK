@@ -21,6 +21,19 @@ public class PlatformController : MonoBehaviour
         transform.position += MovDirection * Time.deltaTime;
     }
 
+    public void SetPlatformSpeed(float Speed = 8f)
+    {
+        PlatformSpeed = Speed;
+    }
+    public void SetPlatformLength(float Length = 8f)
+    {
+        PlatformLength = Length;
+    }
+    public void SetPlatformBreakable(bool Breakable = false)
+    {
+        m_isBreakable = Breakable;
+    }
+
     public void SetPlatformProperties(float Length = 10f, float Speed = -8f,  bool Breakable = false)
     {
         PlatformSpeed = Speed;

@@ -8,10 +8,11 @@ public class PlatformManager : MonoBehaviour
 
     List<GameObject> activePlatforms;
 
-    RunnerGameplayFunctions funcref;
+    RunnerGameplayFunctions GameplayManager;
 
     float PlatformTimer = 0f;
     bool firstPlatform = false;
+    bool endStop = false;
 
     Vector2 lastVector;
 
@@ -21,31 +22,47 @@ public class PlatformManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        funcref = transform.GetComponent<RunnerGameplayFunctions>();
+        GameplayManager = transform.GetComponent<RunnerGameplayFunctions>();
         activePlatforms = new List<GameObject>();
     }
     // Update is called once per frame
     void Update()
     {
-        if (funcref.GameStarted()) {
+        switch (GameplayManager.GetState())
+        {
+            case RunnerGameplayFunctions.GameState.Running:
+                if (firstPlatform == false)
+                {
+                    SpawnFirstPlatform();
+                    PlatformTimer = 0f;
+                }
+                PlatformTimer += Time.deltaTime;
+                if (PlatformTimer > 2f)
+                {
+                    SpawnPlatform(true);
+                    PlatformTimer = 0f;
+                }
 
-            if (firstPlatform == false)
-            {
-                SpawnFirstPlatform();
-                PlatformTimer = 0f;
-            }
-            PlatformTimer += Time.deltaTime;
-            if (PlatformTimer > 2f)
-            {
-                SpawnPlatform(true);
-                PlatformTimer = 0f;
-            }
-            List<GameObject> offscreenPlatforms = activePlatforms.FindAll(platform => platform.GetComponent<PlatformController>().PlatformIsOffscreen());
-            foreach (GameObject platform in offscreenPlatforms)
-            {
-                activePlatforms.Remove(platform);
-                Destroy(platform);
-            }
+                List<GameObject> offscreenPlatforms = activePlatforms.FindAll(platform => platform.GetComponent<PlatformController>().PlatformIsOffscreen());
+
+                foreach (GameObject platform in offscreenPlatforms)
+                {
+                    activePlatforms.Remove(platform);
+                    Destroy(platform);
+                }
+                break;
+            case RunnerGameplayFunctions.GameState.Dead:
+                if (!endStop)
+                {
+                    foreach (GameObject platform in activePlatforms)
+                    {
+                        platform.GetComponent<PlatformController>().SetPlatformSpeed(0);
+                    }
+                    endStop = true;
+                }
+                break;
+            default:
+                break;
         }
     }
     void SpawnFirstPlatform()
@@ -63,7 +80,8 @@ public class PlatformManager : MonoBehaviour
         }
         if (random == true) {
             Vector2 vector = RandomRelativeVectorNormalized() * 2;
-            GameObject createdPlatform = Instantiate(platformPrefab, new Vector3(0, vector.y, 20 + vector.x), Quaternion.identity); 
+            GameObject createdPlatform = Instantiate(platformPrefab, new Vector3(0, vector.y + lastVector.y, 20 + vector.x), Quaternion.identity); 
+            //note, make it so platforms can't spawn lower or higher than -6/6
             activePlatforms.Add(createdPlatform);
             lastVector = vector;
         }

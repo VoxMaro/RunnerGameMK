@@ -7,22 +7,26 @@ public class RunnerGameplayFunctions : MonoBehaviour
     // Start is called before the first frame update
 
     [SerializeField] GameObject m_playerPrefab = null;
+    
     [SerializeField] Camera m_levelCamera = null;
     [SerializeField] Button buttonToStart = null;
-    //[SerializeField] Canvas m_guiCanvas = null;
-    bool started = false;
-    //Add state management
-    
 
+    public enum GameState
+    {
+        Menu,
+        Running,
+        Dead
+    } 
+    GameState m_GameplayState;
 
     public void StartGame()
     {
         buttonToStart.gameObject.SetActive(false);
-        Instantiate(m_playerPrefab, Vector3.zero, Quaternion.identity);
+        Instantiate(m_playerPrefab, Vector3.zero, Quaternion.identity).GetComponentInChildren<RunnerPlayerController>().SetGameplayFunctions(this);
         // m_playerPrefab
         //((Camera)m_playerPrefab.GetComponentInChildren(typeof(Camera))).;
+        SetState(GameState.Running);
         m_levelCamera.enabled = false;
-        started = true;
     }
 
 
@@ -38,8 +42,12 @@ public class RunnerGameplayFunctions : MonoBehaviour
         
     }
 
-    public bool GameStarted()
+    public GameState GetState()
     {
-        return started;
+        return m_GameplayState;
+    }
+    public void SetState(GameState state)
+    {
+        m_GameplayState = state;
     }
 }
