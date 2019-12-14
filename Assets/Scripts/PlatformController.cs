@@ -2,49 +2,28 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlatformController : MonoBehaviour
+public class PlatformController : MovingObjectController
 {
     // Start is called before the first frame update
-    bool m_isBreakable;
-    Vector3 MovDirection = Vector3.zero;
-    float PlatformSpeed = -8f;
-    float PlatformLength = 10f;
 
-    void Start()
-    {
-        transform.localScale = new Vector3(1,1,PlatformLength);
-    }
 
-    void Update()
-    {
-        MovDirection = new Vector3(MovDirection.x, MovDirection.y, PlatformSpeed);
-        transform.position += MovDirection * Time.deltaTime;
-    }
+    [SerializeField] GameObject itemPrefab = null;
 
-    public void SetPlatformSpeed(float Speed = 8f)
+    public void SetProperties(float Length = 10f, float Speed = -8f,  bool Breakable = false)
     {
-        PlatformSpeed = Speed;
-    }
-    public void SetPlatformLength(float Length = 8f)
-    {
-        PlatformLength = Length;
-    }
-    public void SetPlatformBreakable(bool Breakable = false)
-    {
+        objectSpeed = Speed;
+        objectLength = Length;
+        transform.localScale = new Vector3(1, 1, objectLength);
         m_isBreakable = Breakable;
     }
 
-    public void SetPlatformProperties(float Length = 10f, float Speed = -8f,  bool Breakable = false)
+
+    public void AddItem()
     {
-        PlatformSpeed = Speed;
-        PlatformLength = Length;
-        transform.localScale = new Vector3(1, 1, PlatformLength);
-        m_isBreakable = Breakable;
-    }
-    public bool PlatformIsOffscreen()
-    {
-        if (transform.position.z < -(PlatformLength + 10)) return true;
-        else return false;
+        float RandomSpawnDistance = Random.Range(0f, 100f) / 100;
+        float RandomSpawnHeight = Random.Range(10f, 40f) / 10;
+        GameObject item = Instantiate(itemPrefab, transform.position+new Vector3(0,RandomSpawnHeight,objectLength*RandomSpawnDistance),transform.rotation);
+        item.transform.SetParent(transform);
     }
     
 }

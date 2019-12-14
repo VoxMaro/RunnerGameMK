@@ -5,16 +5,19 @@ using UnityEngine;
 public class PlatformManager : MonoBehaviour
 {
     [SerializeField] GameObject platformPrefab = null;
+    [SerializeField] GameObject projectilePrefab = null;
 
-    List<GameObject> activePlatforms;
+    List<MovingObjectController> activeMovingObjects;
 
     RunnerGameplayFunctions GameplayManager;
 
     float PlatformTimer = 0f;
+    float ProjectileTimer = 0f;
     bool firstPlatform = false;
     bool endStop = false;
 
     Vector2 lastVector;
+    float randomDistMod;
 
     //currently creating/destroying objects, maybe use object pool instead
 
@@ -23,7 +26,7 @@ public class PlatformManager : MonoBehaviour
     void Start()
     {
         GameplayManager = transform.GetComponent<RunnerGameplayFunctions>();
-        activePlatforms = new List<GameObject>();
+        activeMovingObjects = new List<MovingObjectController>();
     }
     // Update is called once per frame
     void Update()
@@ -31,32 +34,38 @@ public class PlatformManager : MonoBehaviour
         switch (GameplayManager.GetState())
         {
             case RunnerGameplayFunctions.GameState.Running:
-                if (firstPlatform == false)
+                PlatformTimer += Time.deltaTime;
+                ProjectileTimer += Time.deltaTime;
+                //Debug.Log(PlatformTimer);
+                if (!firstPlatform)
                 {
                     SpawnFirstPlatform();
                     PlatformTimer = 0f;
                 }
-                PlatformTimer += Time.deltaTime;
+                
                 if (PlatformTimer > 2f)
                 {
-                    SpawnPlatform(true);
-                    PlatformTimer = 0f;
+                    SpawnPlatform();
+                }
+                if(ProjectileTimer > 3f)
+                {
+                    SpawnProjectile();
                 }
 
-                List<GameObject> offscreenPlatforms = activePlatforms.FindAll(platform => platform.GetComponent<PlatformController>().PlatformIsOffscreen());
+                List<MovingObjectController> offscreenPlatforms = activeMovingObjects.FindAll(objects => objects.IsOffscreen());
 
-                foreach (GameObject platform in offscreenPlatforms)
+                foreach (MovingObjectController platforms in offscreenPlatforms)
                 {
-                    activePlatforms.Remove(platform);
-                    Destroy(platform);
+                    activeMovingObjects.Remove(platforms);
+                    Destroy(platforms.gameObject);
                 }
                 break;
             case RunnerGameplayFunctions.GameState.Dead:
                 if (!endStop)
                 {
-                    foreach (GameObject platform in activePlatforms)
+                    foreach (MovingObjectController objects in activeMovingObjects)
                     {
-                        platform.GetComponent<PlatformController>().SetPlatformSpeed(0);
+                        objects.SetSpeed(0);
                     }
                     endStop = true;
                 }
@@ -67,33 +76,41 @@ public class PlatformManager : MonoBehaviour
     }
     void SpawnFirstPlatform()
     {
-        GameObject createdPlatform = Instantiate(platformPrefab, new Vector3(0, -3, 0), Quaternion.identity);
-        createdPlatform.GetComponent<PlatformController>().SetPlatformProperties(65f);
-        activePlatforms.Add(createdPlatform);
+        GameObject createdPlatform = Instantiate(platformPrefab, new Vector3(0, -2, 0), Quaternion.identity);
+        createdPlatform.GetComponent<PlatformController>().SetLength(35f);
+        activeMovingObjects.Add(createdPlatform.GetComponent<PlatformController>());
         firstPlatform = true;
     }
-    void SpawnPlatform(bool random)
+    void SpawnPlatform()
     {
-        if (random == false) { 
-            GameObject createdPlatform = Instantiate(platformPrefab, new Vector3(0, 0, 20), Quaternion.identity); 
-            activePlatforms.Add(createdPlatform); 
-        }
-        if (random == true) {
-            Vector2 vector = RandomRelativeVectorNormalized() * 2;
-            GameObject createdPlatform = Instantiate(platformPrefab, new Vector3(0, vector.y + lastVector.y, 20 + vector.x), Quaternion.identity); 
+            Vector2 vector = RandomRelativeVectorNormalized();
+            // GameObject createdPlatform = Instantiate(platformPrefab, new Vector3(0,( (-6) + vector.y)*1.5f /*+ lastVector.y*/, 25 + (vector.x - (randomDistMod / 5))/ distHeightModFactor), Quaternion.identity);
+            randomDistMod = Random.Range(0f, 50f);
+            PlatformController createdPlatform = Instantiate(platformPrefab, new Vector3(0,(-3) + vector.y -((lastVector.y+2<vector.y) ? 1 : 0), 25+vector.x), Quaternion.identity).GetComponent<PlatformController>();
+           
             //note, make it so platforms can't spawn lower or higher than -6/6
-            activePlatforms.Add(createdPlatform);
+            createdPlatform.SetLength(10 - randomDistMod / 10);
+            
+            activeMovingObjects.Add(createdPlatform);
+            if (randomDistMod < 20) createdPlatform.AddItem();
             lastVector = vector;
-        }
+            Debug.Log(new Vector3(vector.x,vector.y, 10-randomDistMod/10));
+            PlatformTimer = randomDistMod / (80);
+    }
 
+    void SpawnProjectile()
+    {
+        float VarianceNearPlayer = GameplayManager.GetPlayerPosition().y + Random.Range(-4f, 4f);
+        activeMovingObjects.Add(Instantiate(projectilePrefab, new Vector3(0, VarianceNearPlayer, 25), Quaternion.identity).GetComponent<ProjectileController>());
+        ProjectileTimer = 0f;
     }
 
     //Add randomization functions here
 
     Vector2 RandomRelativeVectorNormalized()
     {
-        float angle = Random.Range(-60, 60) * Mathf.Deg2Rad;
-        return new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+        float angle = Random.Range(0f, 70f) * Mathf.Deg2Rad;
+        return new Vector2(Mathf.Cos(angle)*3, Mathf.Sin(angle)*5);
     }
 
 }

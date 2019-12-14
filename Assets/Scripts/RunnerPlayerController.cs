@@ -17,6 +17,7 @@ public class RunnerPlayerController : MonoBehaviour
     RunnerGameplayFunctions GameplayFunctions;
     bool m_raycastResult;
     bool m_jumping;
+    bool hasShield = false;
 
     
 
@@ -78,8 +79,27 @@ public class RunnerPlayerController : MonoBehaviour
     public void OnTriggerEnter(Collider other)
     {
         Debug.Log("HIT");
+
         if(other.tag == "Killbox")
         GameplayFunctions.SetState(RunnerGameplayFunctions.GameState.Dead);
+        if(other.tag == "Projectile")
+           
+        { 
+            if(!hasShield)
+            GameplayFunctions.SetState(RunnerGameplayFunctions.GameState.Dead);
+            else
+            {
+                //other.transform.gameObject
+            }
+        }
+        else if (other.tag == "Item") 
+        {
+            other.GetComponentsInParent<PickupItem>();
+            if (true)
+            {
+                GameplayFunctions.ScorePickup();
+            }
+        }
     }
 
     public void SetGameplayFunctions(RunnerGameplayFunctions gameplayFunctions)

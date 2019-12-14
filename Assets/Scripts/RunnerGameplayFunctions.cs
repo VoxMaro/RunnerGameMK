@@ -11,6 +11,10 @@ public class RunnerGameplayFunctions : MonoBehaviour
     [SerializeField] Camera m_levelCamera = null;
     [SerializeField] Button buttonToStart = null;
 
+    GameObject playerObject;
+
+    float gameScore;
+
     public enum GameState
     {
         Menu,
@@ -22,7 +26,8 @@ public class RunnerGameplayFunctions : MonoBehaviour
     public void StartGame()
     {
         buttonToStart.gameObject.SetActive(false);
-        Instantiate(m_playerPrefab, Vector3.zero, Quaternion.identity).GetComponentInChildren<RunnerPlayerController>().SetGameplayFunctions(this);
+        playerObject = Instantiate(m_playerPrefab, Vector3.zero, Quaternion.identity);
+        playerObject.GetComponentInChildren<RunnerPlayerController>().SetGameplayFunctions(this);
         // m_playerPrefab
         //((Camera)m_playerPrefab.GetComponentInChildren(typeof(Camera))).;
         SetState(GameState.Running);
@@ -39,8 +44,14 @@ public class RunnerGameplayFunctions : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        gameScore += Time.deltaTime * 100;
     }
+
+    public void ScorePickup()
+    {
+
+    }
+
 
     public GameState GetState()
     {
@@ -49,5 +60,10 @@ public class RunnerGameplayFunctions : MonoBehaviour
     public void SetState(GameState state)
     {
         m_GameplayState = state;
+    }
+
+    public Vector3 GetPlayerPosition()
+    {
+        return playerObject.transform.position;
     }
 }
