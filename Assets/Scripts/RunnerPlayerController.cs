@@ -14,9 +14,9 @@ public class RunnerPlayerController : MonoBehaviour
     Vector3 MovDirection;
     // Vector3 MovMomentum;
 
-    RunnerGameplayFunctions GameplayFunctions;
-    bool m_raycastResult;
-    bool m_jumping;
+    RunnerGameplayFunctions gameplayFunctions;
+    bool raycastResult;
+    bool isJumping;
     bool hasShield = false;
 
     
@@ -36,40 +36,40 @@ public class RunnerPlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if ((Input.GetAxisRaw("Jump") > 0) && m_raycastResult && !m_jumping)
+        if ((Input.GetAxisRaw("Jump") > 0) && raycastResult && !isJumping)
         {
             MovDirection += new Vector3(0, JumpStrength, 0);
-            m_jumping = true;
+            isJumping = true;
         }
         //Debug.Log(m_raycastResult);
         //m_controllerMain.Move(MovDirection * Time.deltaTime);
         //int layermask = 1 << 9;
-        m_raycastResult = (Physics.Raycast(transform.position + new Vector3(0,0,PlayerLength), Vector3.down, PlayerHeight, LayerMask.GetMask("Default")) || Physics.Raycast(transform.position - new Vector3(0, 0, PlayerLength), Vector3.down, PlayerHeight, LayerMask.GetMask("Default")));
+        raycastResult = (Physics.Raycast(transform.position + new Vector3(0,0,PlayerLength), Vector3.down, PlayerHeight, LayerMask.GetMask("Default")) || Physics.Raycast(transform.position - new Vector3(0, 0, PlayerLength), Vector3.down, PlayerHeight, LayerMask.GetMask("Default")));
         
         Debug.DrawRay(transform.position + new Vector3(0, 0, PlayerLength), Vector3.down * PlayerHeight);
         Debug.DrawRay(transform.position - new Vector3(0, 0, PlayerLength), Vector3.down * PlayerHeight);
 
-        if (m_raycastResult && MovDirection.y < 0)
+        if (raycastResult && MovDirection.y < 0)
         {
             MovDirection.y = 0;
-            m_jumping = false;
+            isJumping = false;
         }
 
 
-        if (!m_raycastResult)
+        if (!raycastResult)
         {
             MovDirection += Physics.gravity / 50;
         }
 
 
         //stop jumping if player stops holding jump
-        if (m_jumping && !(Input.GetAxisRaw("Jump") > 0))
+        if (isJumping && !(Input.GetAxisRaw("Jump") > 0))
         {
             if (MovDirection.y > 0)
             {
                 MovDirection.y /=3 ;
             }
-            m_jumping = false;
+            isJumping = false;
         }
 
         transform.position += MovDirection * Time.deltaTime;
@@ -81,12 +81,12 @@ public class RunnerPlayerController : MonoBehaviour
         Debug.Log("HIT");
 
         if(other.tag == "Killbox")
-        GameplayFunctions.SetState(RunnerGameplayFunctions.GameState.Dead);
+        gameplayFunctions.SetState(RunnerGameplayFunctions.GameState.Dead);
         if(other.tag == "Projectile")
            
         { 
             if(!hasShield)
-            GameplayFunctions.SetState(RunnerGameplayFunctions.GameState.Dead);
+            gameplayFunctions.SetState(RunnerGameplayFunctions.GameState.Dead);
             else
             {
                 //other.transform.gameObject
@@ -97,14 +97,14 @@ public class RunnerPlayerController : MonoBehaviour
             other.GetComponentsInParent<PickupItem>();
             if (true)
             {
-                GameplayFunctions.ScorePickup();
+                gameplayFunctions.ScorePickup();
             }
         }
     }
 
     public void SetGameplayFunctions(RunnerGameplayFunctions gameplayFunctions)
     {
-        GameplayFunctions = gameplayFunctions;
+        this.gameplayFunctions = gameplayFunctions;
     }
 
     void FixedUpdate()

@@ -14,7 +14,7 @@ public class PlatformController : MovingObjectController
         objectSpeed = Speed;
         objectLength = Length;
         transform.localScale = new Vector3(1, 1, objectLength);
-        m_isBreakable = Breakable;
+        isBreakable = Breakable;
     }
 
 

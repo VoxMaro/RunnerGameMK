@@ -15,4 +15,13 @@ public class PickupItem : MonoBehaviour
     {
         
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.rigidbody.GetComponentInParent<RunnerPlayerController>() != null)
+        {
+            gameObject.GetComponent<Collider>().enabled = false;
+            gameObject.GetComponent<MeshRenderer>().enabled = false;
+        }
+    }
 }

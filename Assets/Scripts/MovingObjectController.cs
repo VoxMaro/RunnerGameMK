@@ -5,7 +5,7 @@ using UnityEngine;
 public class MovingObjectController : MonoBehaviour
 {
 
-    protected bool m_isBreakable;
+    protected bool isBreakable;
     protected Vector3 MovDirection = Vector3.zero;
     protected float objectSpeed = -8f;
     protected float objectLength = 10f;

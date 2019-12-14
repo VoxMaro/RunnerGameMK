@@ -6,14 +6,18 @@ public class RunnerGameplayFunctions : MonoBehaviour
 {
     // Start is called before the first frame update
 
-    [SerializeField] GameObject m_playerPrefab = null;
+    [SerializeField] GameObject playerPrefab = null;
     
-    [SerializeField] Camera m_levelCamera = null;
+    [SerializeField] Camera levelCamera = null;
     [SerializeField] Button buttonToStart = null;
+   // [SerializeField] TextMesh scoreText = null;
+    [SerializeField] TMPro.TextMeshProUGUI scoreText = null;
+
 
     GameObject playerObject;
 
-    float gameScore;
+    int gameScore;
+    float gameTimeElapsed;
 
     public enum GameState
     {
@@ -26,12 +30,12 @@ public class RunnerGameplayFunctions : MonoBehaviour
     public void StartGame()
     {
         buttonToStart.gameObject.SetActive(false);
-        playerObject = Instantiate(m_playerPrefab, Vector3.zero, Quaternion.identity);
+        playerObject = Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
         playerObject.GetComponentInChildren<RunnerPlayerController>().SetGameplayFunctions(this);
         // m_playerPrefab
         //((Camera)m_playerPrefab.GetComponentInChildren(typeof(Camera))).;
         SetState(GameState.Running);
-        m_levelCamera.enabled = false;
+        levelCamera.enabled = false;
     }
 
 
@@ -44,12 +48,26 @@ public class RunnerGameplayFunctions : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        gameScore += Time.deltaTime * 100;
+        gameTimeElapsed += Time.deltaTime;
+        switch (m_GameplayState)
+        {
+            case GameState.Menu:
+
+                break;
+            case GameState.Running:
+                gameScore += (int)(10 * (1+ (gameTimeElapsed/300)));
+                scoreText.text = "Score: " + gameScore.ToString();
+                break;
+            default:
+
+                break;
+        }
+       
     }
 
     public void ScorePickup()
     {
-
+        gameScore += (int)(1000 * (1 + (gameTimeElapsed / 300)));
     }
 
 

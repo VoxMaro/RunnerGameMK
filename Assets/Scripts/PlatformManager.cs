@@ -6,6 +6,7 @@ public class PlatformManager : MonoBehaviour
 {
     [SerializeField] GameObject platformPrefab = null;
     [SerializeField] GameObject projectilePrefab = null;
+    [SerializeField] float projectileTimerStart = 0f;
 
     List<MovingObjectController> activeMovingObjects;
 
@@ -27,6 +28,7 @@ public class PlatformManager : MonoBehaviour
     {
         GameplayManager = transform.GetComponent<RunnerGameplayFunctions>();
         activeMovingObjects = new List<MovingObjectController>();
+        ProjectileTimer = projectileTimerStart;
     }
     // Update is called once per frame
     void Update()
