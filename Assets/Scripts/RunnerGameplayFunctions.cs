@@ -10,7 +10,6 @@ public class RunnerGameplayFunctions : MonoBehaviour
     
     [SerializeField] Camera levelCamera = null;
     [SerializeField] Button buttonToStart = null;
-   // [SerializeField] TextMesh scoreText = null;
     [SerializeField] TMPro.TextMeshProUGUI scoreText = null;
 
 
@@ -36,6 +35,13 @@ public class RunnerGameplayFunctions : MonoBehaviour
         //((Camera)m_playerPrefab.GetComponentInChildren(typeof(Camera))).;
         SetState(GameState.Running);
         levelCamera.enabled = false;
+
+
+        //testing, remove asap
+        //QualitySettings.vSyncCount = 0;  // VSync must be disabled
+        //Application.targetFrameRate = 60;
+
+
     }
 
 

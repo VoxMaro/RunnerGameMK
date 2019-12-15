@@ -80,24 +80,25 @@ public class PlatformManager : MonoBehaviour
     {
         GameObject createdPlatform = Instantiate(platformPrefab, new Vector3(0, -2, 0), Quaternion.identity);
         createdPlatform.GetComponent<PlatformController>().SetLength(35f);
+        //createdPlatform.GetComponent<PlatformController>().SetSpeed(0f);
         activeMovingObjects.Add(createdPlatform.GetComponent<PlatformController>());
         firstPlatform = true;
     }
     void SpawnPlatform()
     {
-            Vector2 vector = RandomRelativeVectorNormalized();
-            // GameObject createdPlatform = Instantiate(platformPrefab, new Vector3(0,( (-6) + vector.y)*1.5f /*+ lastVector.y*/, 25 + (vector.x - (randomDistMod / 5))/ distHeightModFactor), Quaternion.identity);
-            randomDistMod = Random.Range(0f, 50f);
-            PlatformController createdPlatform = Instantiate(platformPrefab, new Vector3(0,(-3) + vector.y -((lastVector.y+2<vector.y) ? 1 : 0), 25+vector.x), Quaternion.identity).GetComponent<PlatformController>();
+        Vector2 vector = RandomRelativeVectorNormalized();
+        //GameObject createdPlatform = Instantiate(platformPrefab, new Vector3(0,( (-6) + vector.y)*1.5f /*+ lastVector.y*/, 25 + (vector.x - (randomDistMod / 5))/ distHeightModFactor), Quaternion.identity);
+        randomDistMod = Random.Range(0f, 50f);
+        PlatformController createdPlatform = Instantiate(platformPrefab, new Vector3(0,(-3) + vector.y -((lastVector.y+2<vector.y) ? 1 : 0), 25+vector.x), Quaternion.identity).GetComponent<PlatformController>();
            
-            //note, make it so platforms can't spawn lower or higher than -6/6
-            createdPlatform.SetLength(10 - randomDistMod / 10);
+        //note, make it so platforms can't spawn lower or higher than -6/6
+        createdPlatform.SetLength(10 - randomDistMod / 10);
             
-            activeMovingObjects.Add(createdPlatform);
-            if (randomDistMod < 20) createdPlatform.AddItem();
-            lastVector = vector;
-            Debug.Log(new Vector3(vector.x,vector.y, 10-randomDistMod/10));
-            PlatformTimer = randomDistMod / (80);
+        activeMovingObjects.Add(createdPlatform);
+        if (randomDistMod < 20) createdPlatform.AddItem();
+        lastVector = vector;
+        Debug.Log(new Vector3(vector.x,vector.y, 10-randomDistMod/10));
+        PlatformTimer = randomDistMod / (80);
     }
 
     void SpawnProjectile()
