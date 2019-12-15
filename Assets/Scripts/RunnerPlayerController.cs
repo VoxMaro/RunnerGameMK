@@ -45,7 +45,7 @@ public class RunnerPlayerController : MonoBehaviour
     void Update()
     {
         
-        if (((Input.GetAxisRaw("Jump") > 0) || Input.touchCount >0) && raycastResult && !isJumping)
+        if (((Input.GetAxisRaw("Jump") > 0) || Input.touchCount > 0) && raycastResult && !isJumping)
         {
             MovDirection += new Vector3(0, JumpStrength, 0);
             isJumping = true;
@@ -82,7 +82,7 @@ public class RunnerPlayerController : MonoBehaviour
 
 
         //stop jumping if player stops holding jump
-        if (isJumping && !(Input.GetAxisRaw("Jump") > 0))
+        if (isJumping && !((Input.GetAxisRaw("Jump") > 0) || Input.touchCount > 0))
         {
             if (MovDirection.y > 0)
             {

@@ -57,7 +57,10 @@ public class RunnerGameplayFunctions : MonoBehaviour
         SetState(GameState.Running);
     }
 
-
+    public void EndGame()
+    {
+        Application.Quit();
+    }
 
     void Start()
     {
