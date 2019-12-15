@@ -44,7 +44,8 @@ public class RunnerPlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if ((Input.GetAxisRaw("Jump") > 0) && raycastResult && !isJumping)
+        
+        if (((Input.GetAxisRaw("Jump") > 0) || Input.touchCount >0) && raycastResult && !isJumping)
         {
             MovDirection += new Vector3(0, JumpStrength, 0);
             isJumping = true;

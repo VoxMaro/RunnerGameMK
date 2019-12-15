@@ -10,6 +10,7 @@ public class RunnerGameplayFunctions : MonoBehaviour
     
     [SerializeField] Camera levelCamera = null;
     [SerializeField] Button buttonToStart = null;
+    [SerializeField] Button replayButton = null;
     [SerializeField] TMPro.TextMeshProUGUI scoreText = null;
 
 
@@ -44,6 +45,18 @@ public class RunnerGameplayFunctions : MonoBehaviour
 
     }
 
+    public void RestartGame()
+    {
+        replayButton.gameObject.SetActive(false);
+        playerObject = Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
+        playerObject.GetComponentInChildren<RunnerPlayerController>().SetGameplayFunctions(this);
+        
+        levelCamera.enabled = false;
+        gameTimeElapsed = 0f;
+        gameScore = 0;
+        SetState(GameState.Running);
+    }
+
 
 
     void Start()
@@ -61,14 +74,33 @@ public class RunnerGameplayFunctions : MonoBehaviour
 
                 break;
             case GameState.Running:
-                gameScore += (int)(10 * (1+ (gameTimeElapsed/300)));
-                scoreText.text = "Score: " + gameScore.ToString();
+                break;
+            case GameState.Dead:
+                replayButton.gameObject.SetActive(true);
+                levelCamera.enabled = true;
+                Destroy(playerObject);
                 break;
             default:
 
                 break;
         }
        
+    }
+
+    private void FixedUpdate()
+    {
+        switch (m_GameplayState)
+        {
+            case GameState.Menu:
+
+                break;
+            case GameState.Running:
+                gameScore += (int)(10 * (1 + (gameTimeElapsed / 300)));
+                scoreText.text = "Score: " + gameScore.ToString();
+                break;
+            default:
+                break;
+        }
     }
 
     public void ScorePickup()

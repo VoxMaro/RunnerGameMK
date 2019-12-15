@@ -16,6 +16,7 @@ public class PlatformManager : MonoBehaviour
     float ProjectileTimer = 0f;
     bool firstPlatform = false;
     bool endStop = false;
+    bool restart = false;
 
     Vector2 lastVector;
     float randomDistMod;
@@ -31,11 +32,30 @@ public class PlatformManager : MonoBehaviour
         ProjectileTimer = projectileTimerStart;
     }
     // Update is called once per frame
+
+    void RestartGame()
+    {
+        foreach(MovingObjectController obj in activeMovingObjects)
+        {
+            Destroy(obj.gameObject);
+        }
+        activeMovingObjects.Clear();
+        ProjectileTimer = projectileTimerStart;
+        PlatformTimer = 0f;
+        SpawnFirstPlatform();
+        restart = false;
+        endStop = false;
+    }
     void Update()
     {
         switch (GameplayManager.GetState())
         {
             case RunnerGameplayFunctions.GameState.Running:
+                if(restart == true)
+                {
+                    RestartGame();
+
+                }
                 PlatformTimer += Time.deltaTime;
                 ProjectileTimer += Time.deltaTime;
                 //Debug.Log(PlatformTimer);
@@ -70,6 +90,7 @@ public class PlatformManager : MonoBehaviour
                         objects.SetSpeed(0);
                     }
                     endStop = true;
+                    restart = true;
                 }
                 break;
             default:
