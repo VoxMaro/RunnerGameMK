@@ -5,6 +5,19 @@ using UnityEngine;
 public class PickupItem : MonoBehaviour
 {
     // Start is called before the first frame update
+    public enum ItemTypes
+    {
+        Score,
+        Shield
+    }
+
+    ItemTypes currType;
+    public ItemTypes CurrentItemType
+    {
+        get { return currType; }
+        set { currType = value; }
+    }
+
     void Start()
     {
         
@@ -16,12 +29,11 @@ public class PickupItem : MonoBehaviour
         
     }
 
-    private void OnCollisionEnter(Collision collision)
+    public void ItemCollected()
     {
-        if (collision.rigidbody.GetComponentInParent<RunnerPlayerController>() != null)
-        {
-            gameObject.GetComponent<Collider>().enabled = false;
-            gameObject.GetComponent<MeshRenderer>().enabled = false;
-        }
+        gameObject.GetComponent<Collider>().enabled = false;
+        gameObject.GetComponent<MeshRenderer>().enabled = false;
+        //gameObject.GetComponent<>
     }
+   
 }

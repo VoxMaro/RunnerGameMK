@@ -22,8 +22,11 @@ public class PlatformController : MovingObjectController
     {
         float RandomSpawnDistance = Random.Range(0f, 100f) / 100;
         float RandomSpawnHeight = Random.Range(10f, 40f) / 10;
+        float RandomShieldChance = Random.Range(0f, 1f);
         GameObject item = Instantiate(itemPrefab, transform.position+new Vector3(0,RandomSpawnHeight,objectLength*RandomSpawnDistance),transform.rotation);
         item.transform.SetParent(transform);
+        if(RandomShieldChance > 0.8f)
+        item.GetComponent<PickupItem>().CurrentItemType = PickupItem.ItemTypes.Shield;
     }
     
 }

@@ -774,9 +774,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 773bcc61786b23846bee186c7a44655d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_playerPrefab: {fileID: 8104890435599136086, guid: 54e6abc49830974488dd226db19e153e,
+  playerPrefab: {fileID: 8104890435599136086, guid: 54e6abc49830974488dd226db19e153e,
     type: 3}
-  m_levelCamera: {fileID: 1353933811}
+  levelCamera: {fileID: 1353933811}
   buttonToStart: {fileID: 648192447}
   scoreText: {fileID: 664041812}
 --- !u!4 &1554384389
@@ -809,6 +809,7 @@ MonoBehaviour:
     type: 3}
   projectilePrefab: {fileID: 3228487876844756598, guid: 3c63c257e638b52449229780364e82e9,
     type: 3}
+  projectileTimerStart: -10
 --- !u!1 &1608840339
 GameObject:
   m_ObjectHideFlags: 0

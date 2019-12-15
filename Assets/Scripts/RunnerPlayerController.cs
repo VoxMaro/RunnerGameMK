@@ -78,28 +78,43 @@ public class RunnerPlayerController : MonoBehaviour
     }
     public void OnTriggerEnter(Collider other)
     {
-        Debug.Log("HIT");
-
-        if(other.tag == "Killbox")
+        if(other.CompareTag("Killbox"))
         gameplayFunctions.SetState(RunnerGameplayFunctions.GameState.Dead);
-        if(other.tag == "Projectile")
-           
-        { 
+        if(other.CompareTag("Projectile"))
+        {
             if(!hasShield)
             gameplayFunctions.SetState(RunnerGameplayFunctions.GameState.Dead);
             else
             {
+                other.GetComponentInParent<ProjectileController>().ProjectileShielded();
+                setShielded(false);
                 //other.transform.gameObject
             }
         }
-        else if (other.tag == "Item") 
+            else if (other.CompareTag("Item")) 
         {
-            other.GetComponentsInParent<PickupItem>();
-            if (true)
+            
+            switch (other.GetComponentInParent<PickupItem>().CurrentItemType)
             {
-                gameplayFunctions.ScorePickup();
+                case PickupItem.ItemTypes.Score:
+                    gameplayFunctions.ScorePickup();
+                   
+                    break;
+                case PickupItem.ItemTypes.Shield:
+                    setShielded(true);
+                    break;
+                default:
+                    break;
             }
+            other.GetComponentInParent<PickupItem>().ItemCollected();
+
         }
+    }
+
+    void setShielded(bool shielded)
+    {
+        hasShield = shielded;
+        transform.GetChild(0).GetComponent<MeshRenderer>().enabled = shielded;
     }
 
     public void SetGameplayFunctions(RunnerGameplayFunctions gameplayFunctions)
