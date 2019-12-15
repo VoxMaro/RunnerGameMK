@@ -19,6 +19,7 @@ public class RunnerPlayerController : MonoBehaviour
     bool raycastResult;
     bool isJumping;
     bool hasShield = false;
+    bool insideObj = false;
 
 
 
@@ -26,13 +27,14 @@ public class RunnerPlayerController : MonoBehaviour
 
     // float m_vertVelocity;
 
-
+    int platformInc = 0;
     //maybe add double jump
 
     // Start is called before the first frame update
     void Start()
     {
         animator = GetComponentInChildren<Animator>();
+        GetComponent<Rigidbody>().detectCollisions = true;
     }
 
     void UpdateAnimationParameters()
@@ -60,12 +62,17 @@ public class RunnerPlayerController : MonoBehaviour
         tempHit1 = Physics.Raycast(transform.position + new Vector3(0, 0, PlayerLength), Vector3.down, out outHitDist1, PlayerHeight, LayerMask.GetMask("Default"));
         tempHit2 = Physics.Raycast(transform.position - new Vector3(0, 0, PlayerLength), Vector3.down, out outHitDist2, PlayerHeight, LayerMask.GetMask("Default"));
         raycastResult = tempHit1 || tempHit2;
-        
 
+        if (insideObj)
+        {
+            raycastResult = true;
+            //transform.position += new Vector3(0, 0.5f, 0);
+        }
 
         if (raycastResult && MovDirection.y < 0)
         {
             float displaceValue = PlayerHeight - Mathf.Max(outHitDist1.distance, outHitDist2.distance);
+            //if(displaceValue)
             transform.position += new Vector3(0,displaceValue,0);
             MovDirection.y = 0;
             
@@ -95,6 +102,18 @@ public class RunnerPlayerController : MonoBehaviour
         UpdateAnimationParameters();
         // if(m_colliderMain.)
         // m_controllerMain.Move(new Vector3(0, m_vertVelocity, 0));
+    }
+
+    public void OnCollisionEnter(Collision collision)
+    {
+        if (collision.collider.CompareTag("PlatColl"))
+        {
+             insideObj = true;
+        }   
+    }
+    public void OnCollisionExit()
+    {   
+            insideObj = false;
     }
     public void OnTriggerEnter(Collider other)
     {

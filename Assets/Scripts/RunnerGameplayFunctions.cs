@@ -39,8 +39,8 @@ public class RunnerGameplayFunctions : MonoBehaviour
 
 
         //testing, remove asap
-        //QualitySettings.vSyncCount = 0;  // VSync must be disabled
-        //Application.targetFrameRate = 60;
+       // QualitySettings.vSyncCount = 0;  // VSync must be disabled
+       // Application.targetFrameRate = 20;
 
 
     }
